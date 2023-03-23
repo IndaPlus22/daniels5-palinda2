@@ -5,12 +5,18 @@ relevant questions from the root of the repo, preferably in
 #### Task 1
 
 ##### Buggy Code 1
-1. What is wrong:
-2. How it was fixed:
+1. PROBLEM: Channel receiving and sending acts as a synchronization point between different go routines. For example a channel recieve will wait until another go routine is sending to channel, and the go routine sending is waiting for a go routine to recieve.
+Here both the sending and recieving is happening on the same routine or in other words sequentily, this causes the send to wait forever for a recieve since. Hence a deadlock
+
+2. SOLUTION: Either we could directly print hello world or the solution i'am using seperate the channel send into another function and then send that to a go routine, that way we can synchronize the 2 routines properly.
 
 ##### Buggy Code 2
-1. What is wrong:
-2. How it was fixed:
+1. Problem: Is that the main function returns before the print function manages to print all the values. When the main routine returns it kills all the other goroutines this means that the print routine won't have enough time to print all the intigers
+
+2. Solution: We solve this issue using sync.WaitGroup. First we tell the main goroutine to add 1 routine too wait for, then att the end before it returns we tell the main routine too wait for the other routine to be done.
+In the print routine we defer a wg.Done() so that it calls that this routine is done at the end after that the main routine can safely return.
+
+// This program should go to 11, but it seemingly only prints 1 to 10.
 
 #### Task 2
 
