@@ -32,7 +32,7 @@ func main() {
 		if line == "" {
 			continue
 		}
-		//fmt.Printf("%s heard you \n", star)
+		fmt.Printf("%s heard you \n", star)
 		questions <- line // The channel doesn't block.
 	}
 }
@@ -48,7 +48,7 @@ func Oracle() chan<- string {
 	// TODO: Answer questions.
 	go answer(questions, answers)
 	// TODO: Make prophecies.
-	go prophecy(questions, answers)
+	go nonsenseFunc(answers)
 	// TODO: Print answers.
 	go print(answers)
 	return questions
@@ -57,7 +57,24 @@ func Oracle() chan<- string {
 // This is the oracle's secret algorithm.
 // It waits for a while and then sends a message on the answer channel.
 // TODO: make it better.
-func generateAnswer(question string, answer chan<- string) {
+func nonsenseFunc(answer chan<- string) {
+	nonsense := []string{
+		"The moon is dark.",
+		"The sun is bright.",
+		"I see that you are using a computer",
+		"Wow!!! nvm i thought you said something",
+		"It is a me mario, uuh I mean Pythia",
+		"Nice weather today",
+	}
+
+	for {
+		time.Sleep(time.Duration(30+rand.Intn(30)) * time.Second)
+		answer <- nonsense[rand.Intn(len(nonsense))]
+	}
+
+}
+
+func prophecy(question string, answer chan<- string) {
 	// Keep them waiting. Pythia, the original oracle at Delphi,
 	// only gave prophecies on the seventh day of each month.
 	//time.Sleep(time.Duration(2+rand.Intn(3)) * time.Second)
@@ -65,7 +82,7 @@ func generateAnswer(question string, answer chan<- string) {
 	time.Sleep(time.Duration(2+rand.Intn(3)) * time.Second)
 	standardAsnwers := map[string]string{
 		"where":  "You are here",
-		"life":   "How should I know?",
+		"life?":  "How should I know?",
 		"wisdom": "Only one thing is ever guaranteed, that is that you will definitely not achieve the goal if you don't take the shot.",
 		"name":   "Pythia",
 		"21":     "Is the sum of 9 + 10",
@@ -98,27 +115,10 @@ func generateAnswer(question string, answer chan<- string) {
 
 }
 
-func prophecy(question <-chan string, answer chan<- string) {
-	nonsense := []string{
-		"The moon is dark.",
-		"The sun is bright.",
-		"I see that you are using a computer",
-		"Wow!!! nvm i thought you said something",
-		"It is a me mario, uuh I mean Pythia",
-		"Nice weather today",
-	}
-
-	for {
-		time.Sleep(time.Duration(30+rand.Intn(30)) * time.Second)
-		answer <- nonsense[rand.Intn(len(nonsense))]
-	}
-
-}
-
 func answer(question <-chan string, answer chan<- string) {
 
 	for quse := range question {
-		go generateAnswer(quse, answer)
+		go prophecy(quse, answer)
 	}
 
 }
