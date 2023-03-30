@@ -54,9 +54,6 @@ func Oracle() chan<- string {
 	return questions
 }
 
-// This is the oracle's secret algorithm.
-// It waits for a while and then sends a message on the answer channel.
-// TODO: make it better.
 func nonsenseFunc(answer chan<- string) {
 	nonsense := []string{
 		"The moon is dark.",
@@ -82,7 +79,7 @@ func prophecy(question string, answer chan<- string) {
 	time.Sleep(time.Duration(2+rand.Intn(3)) * time.Second)
 	standardAsnwers := map[string]string{
 		"where":  "You are here",
-		"life?":  "How should I know?",
+		"life":   "How should I know?",
 		"wisdom": "Only one thing is ever guaranteed, that is that you will definitely not achieve the goal if you don't take the shot.",
 		"name":   "Pythia",
 		"21":     "Is the sum of 9 + 10",
